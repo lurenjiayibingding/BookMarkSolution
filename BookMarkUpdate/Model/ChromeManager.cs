@@ -57,7 +57,65 @@ namespace BookMarkUpdate
         }
 
         /// <summary>
-        /// 
+        /// 从文件中导入书签栏内容
+        /// </summary>
+        /// <param name="import">书签的导入方式</param>
+        public override void ImportBookmark(string bakPath, ImportEnum import)
+        {
+
+            var bookmark_barFolder = new ChromeFolder
+            {
+                date_added = DateTime.Now.Ticks.ToString(),
+                name = "书签栏",
+                type = "folder",
+            };
+
+            XmlDocument document = new XmlDocument();
+            document.Load(bakPath);
+
+            if (document != null)
+            {
+                var FavoritesColumnNode = document.SelectSingleNode("/FavoritesColumn");
+                if (FavoritesColumnNode != null)
+                {
+                    var bookmark_barNode = FavoritesColumnNode.SelectSingleNode("Folder[@Name='bookmark_bar']");
+                    if (bookmark_barNode != null)
+                    {
+                        ConvertXmlNodeToFolderModel(bookmark_barNode, bookmark_barFolder);
+                    }
+
+                    ChromeFavorites FavoritesModel = null;
+                    string bookmarksPath = GetBookmarksPath();
+                    using (FileStream fs = new FileStream(bookmarksPath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            var json = sr.ReadToEnd();
+                            if (!string.IsNullOrEmpty(json))
+                            {
+                                FavoritesModel = JsonConvert.DeserializeObject<ChromeFavorites>(json);
+
+                                if (FavoritesModel != null)
+                                {
+                                    FavoritesModel.roots.bookmark_bar = bookmark_barFolder;
+                                }
+                            }
+                        }
+                    }
+
+
+                    var jsonFavorites = JsonConvert.SerializeObject(FavoritesModel);
+                    using (FileStream fs2 = new FileStream(bookmarksPath, FileMode.Create, FileAccess.Write))
+                    {
+                        var arrayFavorites = System.Text.Encoding.UTF8.GetBytes(jsonFavorites);
+                        fs2.Write(arrayFavorites, 0, arrayFavorites.Length);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 反序列化字符串得到浏览器书签栏收藏夹
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="name"></param>
@@ -104,11 +162,6 @@ namespace BookMarkUpdate
             }
         }
 
-        /// <summary>
-        /// 处理浏览器收藏夹栏下的文件夹
-        /// </summary>
-        /// <param name="chrome">谷歌浏览器收藏夹下的文件夹</param>
-        /// <param name="browser"></param>
         private void ProcessingFavorites(ChromeFolder chrome, FolderModel browser)
         {
             if (chrome == null)
@@ -123,75 +176,6 @@ namespace BookMarkUpdate
             foreach (var item in chrome.children)
             {
                 ProcessingChromeBase(item, browserFavorites);
-            }
-        }
-
-        /// <summary>
-        /// 从文件中导入书签
-        /// </summary>
-        /// <param name="import">书签的导入方式</param>
-        public override void ImportBookmark(string bakPath, ImportEnum import)
-        {
-
-            var bookmark_barFolder = new ChromeFolder
-            {
-                date_added = DateTime.Now.Ticks.ToString(),
-                name = "书签栏",
-                type = "folder",
-            };
-
-            XmlDocument document = new XmlDocument();
-            document.Load(bakPath);
-
-            if (document != null)
-            {
-                var node1 = document.SelectSingleNode("/FavoritesColumn");
-                if (node1 != null)
-                {
-                    //List<ChromeFolder> list1 = new List<ChromeFolder>();
-
-                    var bookmark_barNode = node1.SelectSingleNode("Folder[@Name='bookmark_bar']");
-                    if (bookmark_barNode != null)
-                    {
-
-                        //list1.Add(bookmark_barFolder);
-
-                        ConvertXmlNodeToFolderModel(bookmark_barNode, bookmark_barFolder);
-                    }
-
-                    //if (list1 != null)
-                    //{
-                    //    string aaaa = JsonConvert.SerializeObject(list1);
-                    //}
-
-                    ChromeFavorites model = null;
-                    string bookmarksPath = GetBookmarksPath();
-                    using (FileStream fs = new FileStream(bookmarksPath, FileMode.Open, FileAccess.Read))
-                    {
-                        using (StreamReader sr = new StreamReader(fs))
-                        {
-                            var json = sr.ReadToEnd();
-                            if (!string.IsNullOrEmpty(json))
-                            {
-                                model = JsonConvert.DeserializeObject<ChromeFavorites>(json);
-
-                                if (model != null)
-                                {
-                                    model.roots.bookmark_bar = bookmark_barFolder;
-                                }
-                            }
-                        }
-                    }
-
-
-                    var bbbb = JsonConvert.SerializeObject(model);
-                    using (FileStream fs2 = new FileStream(bookmarksPath, FileMode.Create, FileAccess.Write))
-                    {
-                        var cccc = System.Text.Encoding.UTF8.GetBytes(bbbb);
-                        fs2.Write(cccc, 0, cccc.Length);
-                    }
-
-                }
             }
         }
 
