@@ -13,8 +13,6 @@ namespace BookMarkUpdateTest
         {
             var instalPath = RegistryHelper.GetInstallationPath("AcroRd32.exe");
             Assert.IsTrue(string.Equals(@"C:\Install\AdobeReader\Reader\", instalPath));
-
-            //var chromePath = RegistryHelper.GetInstallationPath("excel.exe");
         }
     }
 }
