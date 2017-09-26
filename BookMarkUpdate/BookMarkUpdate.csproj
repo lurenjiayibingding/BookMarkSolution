@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Model\BookMarkModel.cs" />
     <Compile Include="Model\BrowserManager.cs" />
+    <Compile Include="Model\ChromeBrowserModels.cs" />
     <Compile Include="Model\ChromeManager.cs" />
     <Compile Include="Enum\ImportEnum.cs" />
     <Compile Include="Form1.cs">
@@ -84,6 +85,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\FolderModel.cs" />
+    <Compile Include="Model\IExploreManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

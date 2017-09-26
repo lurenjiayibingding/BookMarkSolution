@@ -40,7 +40,7 @@ namespace BookMarkUpdate
 
             foreach (var item in folderList)
             {
-                BuilderByFolderNode(document, item, root);
+                BuilderNodeByFolderNode(document, item, root);
             }
 
             document.Save(Environment.CurrentDirectory + "/" + fileName + ".xml");
@@ -52,7 +52,7 @@ namespace BookMarkUpdate
         /// <param name="document"></param>
         /// <param name="model"></param>
         /// <param name="parentNode"></param>
-        private void BuilderByFolderNode(XmlDocument document, FolderModel model, XmlNode parentNode)
+        private void BuilderNodeByFolderNode(XmlDocument document, FolderModel model, XmlNode parentNode)
         {
             XmlNode currentNode = document.CreateNode(XmlNodeType.Element, "Folder", "");
 
@@ -70,14 +70,14 @@ namespace BookMarkUpdate
             {
                 foreach (var item in model.ChildrenFolders)
                 {
-                    BuilderByFolderNode(document, item, currentNode);
+                    BuilderNodeByFolderNode(document, item, currentNode);
                 }
             }
             if (model.ChildrenBookMark != null && model.ChildrenBookMark.Count > 0)
             {
                 foreach (var item in model.ChildrenBookMark)
                 {
-                    BuilderByBookMarkNode(document, item, currentNode);
+                    BuilderNodeByBookMarkNode(document, item, currentNode);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace BookMarkUpdate
         /// <param name="document"></param>
         /// <param name="model"></param>
         /// <param name="parentNode"></param>
-        private void BuilderByBookMarkNode(XmlDocument document, BookMarkModel model, XmlNode parentNode)
+        private void BuilderNodeByBookMarkNode(XmlDocument document, BookMarkModel model, XmlNode parentNode)
         {
             XmlNode currentNode = document.CreateNode(XmlNodeType.Element, "BookMark", "");
 

@@ -75,17 +75,22 @@ namespace BookMarkUpdate
 
             if (document != null)
             {
-                var FavoritesColumnNode = document.SelectSingleNode("/FavoritesColumn");
-                if (FavoritesColumnNode != null)
+                var favoritesColumnNode = document.SelectSingleNode("/FavoritesColumn");
+                if (favoritesColumnNode != null)
                 {
-                    var bookmark_barNode = FavoritesColumnNode.SelectSingleNode("Folder[@Name='bookmark_bar']");
+                    //将XML文件中的收藏夹栏转变成ChromeFolder对象
+                    var bookmark_barNode = favoritesColumnNode.SelectSingleNode("Folder[@Name='bookmark_bar']");
                     if (bookmark_barNode != null)
                     {
                         ConvertXmlNodeToFolderModel(bookmark_barNode, bookmark_barFolder);
                     }
 
-                    ChromeFavorites FavoritesModel = null;
+                    //读取现有的浏览器收藏夹文件
+                    //并且将XML文件中的内容写到该文件中
+                    //重新保存该文件
                     string bookmarksPath = GetBookmarksPath();
+                    ChromeFavorites favoritesModel = null;
+
                     using (FileStream fs = new FileStream(bookmarksPath, FileMode.Open, FileAccess.Read))
                     {
                         using (StreamReader sr = new StreamReader(fs))
@@ -93,22 +98,21 @@ namespace BookMarkUpdate
                             var json = sr.ReadToEnd();
                             if (!string.IsNullOrEmpty(json))
                             {
-                                FavoritesModel = JsonConvert.DeserializeObject<ChromeFavorites>(json);
+                                favoritesModel = JsonConvert.DeserializeObject<ChromeFavorites>(json);
 
-                                if (FavoritesModel != null)
+                                if (favoritesModel != null)
                                 {
-                                    FavoritesModel.roots.bookmark_bar = bookmark_barFolder;
+                                    favoritesModel.roots.bookmark_bar = bookmark_barFolder;
                                 }
                             }
                         }
                     }
 
-
-                    var jsonFavorites = JsonConvert.SerializeObject(FavoritesModel);
-                    using (FileStream fs2 = new FileStream(bookmarksPath, FileMode.Create, FileAccess.Write))
+                    var jsonFavorites = JsonConvert.SerializeObject(favoritesModel);
+                    using (FileStream fs = new FileStream(bookmarksPath, FileMode.Create, FileAccess.Write))
                     {
                         var arrayFavorites = System.Text.Encoding.UTF8.GetBytes(jsonFavorites);
-                        fs2.Write(arrayFavorites, 0, arrayFavorites.Length);
+                        fs.Write(arrayFavorites, 0, arrayFavorites.Length);
                     }
                 }
             }
@@ -232,67 +236,5 @@ namespace BookMarkUpdate
                 throw ex;
             }
         }
-    }
-
-    /// <summary>
-    /// 收藏夹
-    /// </summary>
-    class ChromeFavorites
-    {
-        public string checksum { get; set; }
-
-        public ChromeFoldersCollection roots { get; set; }
-
-        public int version { get; set; }
-    }
-
-    /// <summary>
-    /// 收藏夹文件夹集合
-    /// </summary>
-    class ChromeFoldersCollection
-    {
-        public ChromeFolder bookmark_bar { get; set; }
-
-        public ChromeFolder other { get; set; }
-
-        public ChromeFolder synced { get; set; }
-    }
-
-    /// <summary>
-    /// 收藏夹基类
-    /// </summary>
-    class ChromeBasse
-    {
-        public string type { get; set; }
-    }
-
-    /// <summary>
-    /// 收藏夹内的文件夹
-    /// </summary>
-    class ChromeFolder
-    {
-        public List<object> children { get; set; }
-
-        public string date_added { get; set; }
-
-        public string date_modified { get; set; }
-
-        public string id { get; set; }
-
-        public string name { get; set; }
-
-        public string type { get; set; }
-    }
-
-    /// <summary>
-    /// 收藏夹内的链接
-    /// </summary>
-    class ChromeBookMark
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string type { get; set; }
-        public string date_added { get; set; }
-        public string url { get; set; }
     }
 }
