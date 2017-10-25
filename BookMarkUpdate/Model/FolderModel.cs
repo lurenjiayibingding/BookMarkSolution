@@ -7,6 +7,11 @@ namespace BookMarkUpdate
     /// </summary>
     public class FolderModel
     {
+        public FolderModel(string name) : this()
+        {
+            Name = name;
+        }
+
         public FolderModel()
         {
             ChildrenFolders = new List<FolderModel>();
