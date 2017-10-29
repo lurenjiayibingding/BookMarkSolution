@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChromeManagerTest.cs" />
+    <Compile Include="EdgeManagerTest.cs" />
     <Compile Include="IExploreManagerTest.cs" />
     <Compile Include="RegistryHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

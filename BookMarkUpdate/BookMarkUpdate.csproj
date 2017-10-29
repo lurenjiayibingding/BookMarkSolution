@@ -84,6 +84,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\EdgeManager.cs" />
+    <Compile Include="Model\EdgeModel.cs" />
     <Compile Include="Model\FolderModel.cs" />
     <Compile Include="Model\IExploreManager.cs" />
     <Compile Include="Program.cs" />
