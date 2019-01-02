@@ -4,6 +4,9 @@ using IO = System.IO;
 
 namespace CommonLib
 {
+    /// <summary>
+    /// MyDev
+    /// </summary>
     public class ShortcutHelper
     {
         /// <summary>
