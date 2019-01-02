@@ -76,6 +76,5 @@ namespace CommonLib
         {
             errorMessage = message;
         }
-
     }
 }
