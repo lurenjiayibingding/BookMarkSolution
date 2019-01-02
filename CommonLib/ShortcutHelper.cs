@@ -4,9 +4,6 @@ using IO = System.IO;
 
 namespace CommonLib
 {
-    /// <summary>
-    /// MyDev
-    /// </summary>
     public class ShortcutHelper
     {
         /// <summary>
@@ -33,6 +30,7 @@ namespace CommonLib
 
             try
             {
+                //呵呵呵
                 WshShell shell = new WshShell();
                 IWshURLShortcut urlShort = shell.CreateShortcut(filePath) as IWshURLShortcut;
                 urlShort.TargetPath = targetPath;
