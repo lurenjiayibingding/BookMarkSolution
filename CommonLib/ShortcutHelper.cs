@@ -30,7 +30,7 @@ namespace CommonLib
 
             try
             {
-                //呵呵呵
+                //我就呵呵了
                 WshShell shell = new WshShell();
                 IWshURLShortcut urlShort = shell.CreateShortcut(filePath) as IWshURLShortcut;
                 urlShort.TargetPath = targetPath;
