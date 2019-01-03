@@ -66,14 +66,8 @@ namespace CommonLib
         }
     }
 
-    /// <summary>
-    /// 快捷方式相关的异常
-    /// </summary>
     public class ShortcutException : Exception
     {
-        /// <summary>
-        /// 异常信息
-        /// </summary>
         private string errorMessage;
 
         public string ErrorMessage { get => errorMessage; set => errorMessage = value; }
