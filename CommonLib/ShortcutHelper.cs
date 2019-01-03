@@ -20,6 +20,7 @@ namespace CommonLib
 
             if (string.IsNullOrWhiteSpace(targetPath))
             {
+                //我要测试
                 throw new ShortcutException("快捷方式的指向路径为空");
             }
 
